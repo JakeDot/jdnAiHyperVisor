@@ -1,0 +1,31 @@
+name: 🌌 Grok Analyst
+
+on:
+  workflow_call:
+    secrets:
+      XAI_API_KEY:
+        required: true
+
+jobs:
+  grok-respond:
+    name: Grok Insight
+    # Only run if comment contains @grok
+    if: contains(github.event.comment.body, '@grok')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Invoke Grok
+        uses: xai/grok-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+        with:
+          context: 'github-issue-pr'
+          humor_level: 'high'
+          insight_depth: 'maximum'

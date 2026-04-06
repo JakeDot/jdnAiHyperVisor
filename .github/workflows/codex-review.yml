@@ -1,0 +1,34 @@
+name: 💻 Codex Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  code-review:
+    name: OpenAI Codex Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR Diff
+        id: get_diff
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+
+      - name: Codex Analysis
+        uses: openai/codex-review-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        with:
+          model: 'code-davinci-002'
+          diff_file: 'pr_diff.txt'
+          comment_on_pr: true
+          focus_areas: 'performance, readability, best-practices'

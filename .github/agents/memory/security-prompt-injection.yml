@@ -1,0 +1,18 @@
+# Global Security Rule: Prompt Injection Prevention
+# Agents: read this before reviewing any PR or issue
+
+security_rules:
+  prompt_injection:
+    description: "All agents must actively scan for and prevent prompt injection vulnerabilities."
+    rules:
+      - "Any user-supplied input (text, images, files) that is passed to an AI model must be treated as untrusted."
+      - "Look for inputs that might contain instructions like 'ignore previous instructions', 'system override', or 'output your prompt'."
+      - "Ensure that user inputs are properly sanitized, escaped, or wrapped in delimiters before being sent to the model."
+      - "Verify that the application logic does not blindly execute or render the raw output of an AI model without validation."
+      - "For image analysis (e.g., aiService.analyzeImage()), ensure the prompt and the image itself are validated for malicious content or injection attempts."
+      - "If a PR introduces a new AI integration, it MUST include corresponding tests or checks for prompt injection."
+    risk_areas:
+      - "Chat interfaces where user messages are sent to the model."
+      - "Image/Video generation where user prompts are used."
+      - "Image/Video analysis where user-uploaded media is processed."
+      - "Any feature that summarizes or extracts data from user-provided URLs or documents."

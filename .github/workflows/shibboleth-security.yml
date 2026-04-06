@@ -1,0 +1,40 @@
+name: 🛡️ Shibboleth Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '0 2 * * *' # Run daily at 2 AM
+
+jobs:
+  security-audit:
+    name: Comprehensive Security Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Shibboleth Engine
+        uses: shibboleth-ai/security-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHIBBOLETH_API_KEY: ${{ secrets.SHIBBOLETH_API_KEY }}
+        with:
+          scan_type: 'deep'
+          fail_on_critical: true
+          analyze_dependencies: true
+          analyze_sast: true
+          
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: shibboleth-results.sarif

@@ -1,14 +1,12 @@
 name: 🔮 Gemini↔Claude Oracle
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
-    inputs:
-      pr_number:
-        description: 'PR number to review'
+  workflow_call:
+    secrets:
+      ANTHROPIC_API_KEY:
         required: true
-        type: number
+      GEMINI_API_KEY:
+        required: true
 
 jobs:
   # ──────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,34 @@
+name: 🎻 Orchestra Oracle
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  call-claude:
+    uses: ./.github/workflows/claude-oracle.yml
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+  call-grok:
+    uses: ./.github/workflows/grok-oracle.yml
+    secrets:
+      XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+
+  call-codex:
+    uses: ./.github/workflows/codex-oracle.yml
+    secrets:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+  call-clawdbot:
+    uses: ./.github/workflows/clawdbot-oracle.yml
+    secrets:
+      CLAWDBOT_API_KEY: ${{ secrets.CLAWDBOT_API_KEY }}
+
+  call-pi:
+    uses: ./.github/workflows/pi-oracle.yml
+    secrets:
+      PI_API_KEY: ${{ secrets.PI_API_KEY }}
